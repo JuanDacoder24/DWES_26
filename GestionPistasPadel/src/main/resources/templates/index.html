@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Pistas de Pádel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h2::before {
+            content: "🎾";
+            font-size: 1.5rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            color: #333;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        input[type="text"] {
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        input[type="text"]:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        #listaPistas {
+            list-style: none;
+            display: grid;
+            gap: 15px;
+        }
+
+        .pista-item {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .pista-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .pista-nombre {
+            font-weight: 700;
+            color: #333;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+        }
+
+        .pista-horas {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-style: italic;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>⚡ Gestión de Pistas de Pádel</h1>
+
+        <!-- Formulario para añadir una nueva pista -->
+        <div class="card">
+            <h2>Añadir Nueva Pista</h2>
+            <form action="/addPista" method="post">
+                <div class="form-group">
+                    <label for="nombrePista">Nombre de la pista</label>
+                    <input type="text" id="nombrePista" name="nombrePista" placeholder="Ej: Pista Central" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="horas">Horas disponibles (separadas por comas)</label>
+                    <input type="text" id="horas" name="horas" placeholder="Ej: 09:00, 10:00, 11:00" required>
+                </div>
+
+                <button type="submit">✅ Añadir Pista</button>
+            </form>
+        </div>
+
+        <!-- Listado de pistas disponibles -->
+        <div class="card">
+            <h2>Pistas Disponibles</h2>
+            <ul id="listaPistas">
+                <li class="empty-state">No hay pistas disponibles. ¡Añade la primera!</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Ejemplo de cómo podrías agregar pistas dinámicamente
+        // Este código es solo para demostración visual
+        const listaPistas = document.getElementById('listaPistas');
+        
+        // Función para renderizar pistas
+        function renderizarPistas(pistas) {
+            if (pistas.length === 0) {
+                listaPistas.innerHTML = '<li class="empty-state">No hay pistas disponibles. ¡Añade la primera!</li>';
+                return;
+            }
+            
+            listaPistas.innerHTML = pistas.map(pista => `
+                <li class="pista-item">
+                    <div class="pista-nombre">${pista.nombre}</div>
+                    <div class="pista-horas">🕐 Horarios: ${pista.horas}</div>
+                </li>
+            `).join('');
+        }
+
+        // Ejemplo de datos (esto vendría de tu servidor)
+        // renderizarPistas([
+        //     { nombre: 'Pista 1', horas: '09:00, 10:00, 11:00' },
+        //     { nombre: 'Pista 2', horas: '14:00, 15:00, 16:00' }
+        // ]);
+    </script>
+</body>
+
+</html>
+
+</html>
