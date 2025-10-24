@@ -24,8 +24,7 @@ import org.springframework.web.servlet.view.RedirectView;
     }
          
     @PostMapping("/addPista")
-    public RedirectView añadirPista(@RequestParam(name="nombrePista") String nombrePista) {
-        
+    public RedirectView añadirPista(@RequestParam(name="nombrePista") String nombrePista, @RequestParam(name = "horas") String horas) {
 
         return new RedirectView("/");
     }
