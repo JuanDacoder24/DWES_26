@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -14,7 +14,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(#6d0049 0%, #ff8fdd 100%);
+            background: linear-gradient(#ff9900 0%, #c2b60c 100%);
             min-height: 100vh;
             padding: 20px;
         }
@@ -46,6 +46,7 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -99,7 +100,7 @@
         }
 
         button {
-            background: linear-gradient(#6d0049 0%, #ff8fdd 100%);
+            background: linear-gradient(#53d342 0%, #5c9b71 100%);
             color: white;
             padding: 14px 28px;
             border: none;
@@ -197,38 +198,23 @@
 
         <div class="card">
             <h2>Pistas Disponibles</h2>
-            <ul id="listaPistas">
-                <li class="empty-state">No hay pistas disponibles. ¡Añade la primera!</li>
-            </ul>
+            <!--Esta condicion comprueba si la lista pistas no esta vacia-->
+            <div th:if="${!pistas.isEmpty()}">
+                <ul id="listaPistas">
+                    <li class="pista-item" th:each="pista : ${pistas}">
+                        <div class="pista-nombre" th:text="${pista.nombrePista}"></div>
+                        <div class="pista-horas" th:text="'Horas: ' + ${pista.horasDisponibles}"></div>
+
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Mensaje que se muestra solo si la lista 'pistas' está vacía -->
+            <div th:if="${pistas.isEmpty()}" class="empty-state">
+                No hay pistas disponibles. ¡Añade la primera!
+            </div>
         </div>
     </div>
-
-    <script>
-        // Ejemplo de cómo podrías agregar pistas dinámicamente
-        // Este código es solo para demostración visual
-        const listaPistas = document.getElementById('listaPistas');
-        
-        // Función para renderizar pistas
-        function renderizarPistas(pistas) {
-            if (pistas.length === 0) {
-                listaPistas.innerHTML = '<li class="empty-state">No hay pistas disponibles. ¡Añade la primera!</li>';
-                return;
-            }
-            
-            listaPistas.innerHTML = pistas.map(pista => `
-                <li class="pista-item">
-                    <div class="pista-nombre">${pista.nombre}</div>
-                    <div class="pista-horas">🕐 Horarios: ${pista.horas}</div>
-                </li>
-            `).join('');
-        }
-
-        // Ejemplo de datos (esto vendría de tu servidor)
-        // renderizarPistas([
-        //     { nombre: 'Pista 1', horas: '09:00, 10:00, 11:00' },
-        //     { nombre: 'Pista 2', horas: '14:00, 15:00, 16:00' }
-        // ]);
-    </script>
 </body>
 
 </html>

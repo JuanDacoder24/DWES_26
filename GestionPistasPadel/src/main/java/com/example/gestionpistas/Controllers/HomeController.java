@@ -12,21 +12,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
 
-
 @Controller
-    public class HomeController {
+public class HomeController {
 
     public List<Pista> listaPista = new ArrayList<Pista>();
 
     @GetMapping("/")
     public String mostrarPistas(Model model) {
+        model.addAttribute("pistas", listaPista);
         return "index";
     }
-         
+
     @PostMapping("/addPista")
-    public RedirectView añadirPista(@RequestParam(name="nombrePista") String nombrePista, @RequestParam(name = "horas") String horas) {
+    public RedirectView añadirPista(@RequestParam(name = "nombrePista") String nombrePista, @RequestParam(name = "horas") String horas) {
+        Pista nuevaPista = new Pista(nombrePista, horas);
+        listaPista.add(nuevaPista);
 
         return new RedirectView("/");
     }
-    
+
 }
