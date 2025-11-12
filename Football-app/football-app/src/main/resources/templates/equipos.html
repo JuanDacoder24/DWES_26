@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lista de Equipos</title>
+</head>
+<body>
+    <h1>Equipos registrados</h1>
+    <ul>
+        <li th:each="equipo : ${equipos}" th:text="${equipo.nombre}"></li>
+    </ul>
+</body>
+</html>
