@@ -6,13 +6,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "pedidos")
 public class PedidoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    long id;
     String nombre_cliente;
     LocalDateTime fecha_pedido;
     double importe_total;
@@ -22,7 +24,7 @@ public class PedidoEntity {
 
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
